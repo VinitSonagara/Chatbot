@@ -1,0 +1,54 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	height: 100vh;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.content {
+	flex-grow: 1;
+	overflow-y: auto;
+	padding-bottom: 80px;
+}
+
+.question,
+.answer {
+	background: #f4f4f4;
+	padding: 20px;
+	border-radius: 8px;
+	margin-bottom: 10px;
+}
+
+.input-form {
+	display: flex;
+	gap: 10px;
+	position: sticky;
+	bottom: 20px;
+	background: white;
+	padding: 10px;
+	border-top: 1px solid #ddd;
+}
+
+.input-field {
+	flex-grow: 1;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+.submit-button {
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.submit-button:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
+}
