@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import mockChunkedApi from './helper/mockChunkedApi';
 import './App.css';
+import QAList from './components/QAList';
+import InputField from './components/InputField';
 
 const App = () => {
-	const [input, setInput] = useState('');
 	const [displayText, setDisplayText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [chunks, setChunks] = useState([]);
@@ -32,6 +33,7 @@ const App = () => {
 	}, [chunks, currentChunkIndex, charIndex]);
 
 	const handleSubmit = async (e) => {
+		const input = e?.target[0].value || '';
 		e.preventDefault();
 		setDisplayText('');
 		setIsLoading(true);
@@ -39,7 +41,6 @@ const App = () => {
 		setCurrentChunkIndex(0);
 		setCharIndex(0);
 		setQuestions([...questions, input]);
-		setInput('');
 
 		try {
 			const stream = mockChunkedApi();
@@ -68,38 +69,12 @@ const App = () => {
 
 	return (
 		<div className='container'>
-			<div className='content'>
-				{questions.length > 0 &&
-					questions.map((question, index) => {
-						if (index === questions.length - 1) {
-							return (
-								<>
-									<div className='question'>Q: {question}</div>
-									<div className='answer'>A: {displayText}</div>
-								</>
-							);
-						}
-						return (
-							<>
-								<div className='question'>Q: {question}</div>
-								<div className='answer'>A: {answers[index]}</div>
-							</>
-						);
-					})}
-			</div>
-			<form onSubmit={handleSubmit} className='input-form'>
-				<input
-					type='text'
-					value={input}
-					onChange={(e) => setInput(e.target.value)}
-					placeholder='Ask a question...'
-					disabled={isLoading}
-					className='input-field'
-				/>
-				<button type='submit' disabled={isLoading} className='submit-button'>
-					Submit
-				</button>
-			</form>
+			<QAList
+				questions={questions}
+				answers={answers}
+				displayText={displayText}
+			/>
+			<InputField handleSubmit={handleSubmit} isLoading={isLoading} />
 		</div>
 	);
 };
