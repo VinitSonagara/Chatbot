@@ -22,7 +22,7 @@ const App = () => {
 			const timer = setTimeout(() => {
 				setDisplayText((prev) => prev + currentChunk[charIndex]);
 				setCharIndex((prev) => prev + 1);
-			}, 30);
+			}, 5);
 
 			return () => clearTimeout(timer);
 		} else {
