@@ -7,12 +7,27 @@ import InputField from './components/InputField';
 const App = () => {
 	const [displayText, setDisplayText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const [isThinking, setIsThinking] = useState(false);
+	const [thinkingDots, setThinkingDots] = useState('');
 	const [chunks, setChunks] = useState([]);
 	const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
 	const [charIndex, setCharIndex] = useState(0);
 	const [questions, setQuestions] = useState([]);
 	const [answers, setAnswers] = useState([]);
 	const displayTextRef = useRef('');
+
+	useEffect(() => {
+		if (!isThinking) {
+			setThinkingDots('');
+			return;
+		}
+
+		const interval = setInterval(() => {
+			setThinkingDots((prev) => (prev.length < 10 ? prev + '.' : ''));
+		}, 500);
+
+		return () => clearInterval(interval);
+	}, [isThinking]);
 
 	useEffect(() => {
 		if (chunks.length === 0 || currentChunkIndex >= chunks.length) return;
@@ -37,6 +52,7 @@ const App = () => {
 		e.preventDefault();
 		setDisplayText('');
 		setIsLoading(true);
+		setIsThinking(true);
 		setChunks([]);
 		setCurrentChunkIndex(0);
 		setCharIndex(0);
@@ -45,6 +61,7 @@ const App = () => {
 		try {
 			const stream = mockChunkedApi();
 			const reader = stream.getReader();
+			let isFirstChunk = true;
 
 			while (true) {
 				const { done, value } = await reader.read();
@@ -56,6 +73,10 @@ const App = () => {
 				}
 
 				if (value) {
+					if (isFirstChunk) {
+						setIsThinking(false);
+						isFirstChunk = false;
+					}
 					displayTextRef.current = displayTextRef.current + value;
 					setChunks((prev) => [...prev, value]);
 				}
@@ -72,7 +93,13 @@ const App = () => {
 			<QAList
 				questions={questions}
 				answers={answers}
-				displayText={displayText}
+				displayText={
+					isThinking ? (
+						<span className='thinking'>{`Thinking${thinkingDots}`}</span>
+					) : (
+						displayText
+					)
+				}
 			/>
 			<InputField handleSubmit={handleSubmit} isLoading={isLoading} />
 		</div>
