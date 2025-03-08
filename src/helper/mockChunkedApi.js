@@ -1,5 +1,5 @@
 const mockChunkedApi = () => {
-	const chunks = ['Thinking...', 'Analyzing...', `Result...`];
+	const chunks = ['Thinking...', 'Analyzing...', `Result...`, 'Nice...'];
 
 	return new ReadableStream({
 		start: (controller) => {
